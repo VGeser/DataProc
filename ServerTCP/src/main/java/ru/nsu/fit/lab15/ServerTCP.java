@@ -66,7 +66,7 @@ public class ServerTCP {
 
         } catch (ConnectException ex) {
             System.out.println("Server cannot accept any more clients");
-        }catch (IOException ex) {
+        } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());
             ex.printStackTrace();
         }

@@ -12,7 +12,7 @@ public class ServeThread implements Runnable {
     private final BufferedReader in;
     private final PrintWriter out;
 
-    public ServeThread(BufferedReader in,PrintWriter out, int id) {
+    public ServeThread(BufferedReader in, PrintWriter out, int id) {
         this.in = in;
         this.out = out;
         this.id = id;
@@ -20,26 +20,27 @@ public class ServeThread implements Runnable {
 
     @Override
     public void run() {
-        try{
+        try {
             //handshake
             out.println("My luck to know you");
             System.out.println("Greeted client");
 
             String current = in.readLine();
-            System.out.println("Got greeting from client " +id +": " + current);
+            System.out.println("Got greeting from client " + id + ": " + current);
             ServerTCP.lastSent[id] = current;
 
+            //required for system switches, but timeout can be set to less
             sleep(100);
 
             while (!current.equals("exit")) {
                 current = in.readLine();
-                System.out.println("Got the following line from client "+id+": " + current);
-                out.println("heard "+current);
+                System.out.println("Got the following line from client " + id + ": " + current);
+                out.println("heard " + current);
                 ServerTCP.lastSent[id] = current;
             }
-            System.out.println("Client "+ id +" disconnected");
+            System.out.println("Client " + id + " disconnected");
 
-        }catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

@@ -32,6 +32,7 @@ public class ClientTCP {
             out.println("Hello it's client");
             System.out.println("Greeted server");
 
+            //required for system switches, but timeout can be set to less
             sleep(100);
 
             String nextLine = "";

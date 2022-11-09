@@ -15,7 +15,7 @@ public class ProxyThread implements Runnable {
 
     public ProxyThread(BufferedReader clientIn, PrintWriter clientOut,
                        BufferedReader endIn, PrintWriter endOut,
-                       int id){
+                       int id) {
         this.clientIn = clientIn;
         this.clientOut = clientOut;
         this.endIn = endIn;
@@ -25,7 +25,7 @@ public class ProxyThread implements Runnable {
 
     @Override
     public void run() {
-        try{
+        try {
             //handshake
             String temp = endIn.readLine(); //get message from end
             ServerTCP.lastProxy[id] = temp;
@@ -34,6 +34,7 @@ public class ProxyThread implements Runnable {
             ServerTCP.lastProxy[id] = temp;
             endOut.println(temp); //send it to end
 
+            //required for system switches, but timeout can be set to less
             sleep(100);
 
             while (!temp.equals("exit")) {
@@ -46,9 +47,9 @@ public class ProxyThread implements Runnable {
                 ServerTCP.lastProxy[id] = temp;
                 clientOut.println(temp);
             }
-            System.out.println("Client "+ id +" disconnected");
+            System.out.println("Client " + id + " disconnected");
 
-        }catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
