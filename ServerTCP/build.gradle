@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.nsu.fit.lab15'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.0")
+}
+
+test {
+    useJUnitPlatform()
+}
