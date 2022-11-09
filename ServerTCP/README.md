@@ -19,7 +19,7 @@ be careful of:
 - "java -version" and "absolute path\java.exe -version"
 - %CLASSPATH% must be set and NOT! include package
 
-3) run proxy (mind order)
+3) run proxy (order matters!)
 ```bat
 your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.lab15.ServerTCP 3434 2 localhost 2525 localhost
 ```
