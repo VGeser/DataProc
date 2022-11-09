@@ -3,7 +3,7 @@
 - - - - - - - - TDD FOR LIFE! - - - - - - - -
 ```
 
-To test with your own hands, open 4 command prompts: 1 and server, 1 proxy and 2 clients
+To test with your own hands, open 4 command prompts: 1 end server, 1 proxy and 2 clients
 1) compile files
 
 I put absolute path, you may google javac docs to make it more convenient
