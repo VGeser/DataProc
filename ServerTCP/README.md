@@ -9,7 +9,7 @@ To test with your own hands, open 4 command prompts: 1 end server, 1 proxy and 2
 I put absolute path, you may google javac docs to make it more convenient
 
 ```bat
-your directory> "C:\Program Files\Java\jdk-14.0.2\bin\javac.exe" ServerTCP.java ClientTCP.java ProxyThread.java ServeThread.java
+your directory> "C:\Program Files\Java\jdk-14.0.2\bin\javac.exe" ServerTCP.java ClientTCP.java ProxyThread.java ServeThread.java ProxyHandler.java SocketHandler.java
 ```
 2) run end server (order matters!)
 ```bat
