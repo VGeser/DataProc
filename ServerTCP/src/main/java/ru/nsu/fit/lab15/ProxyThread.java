@@ -1,53 +1,61 @@
 package ru.nsu.fit.lab15;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 public class ProxyThread implements Runnable {
-    private final int id;
-    private final BufferedReader clientIn;
-    private final BufferedReader endIn;
-    private final PrintWriter clientOut;
-    private final PrintWriter endOut;
 
-    public ProxyThread(BufferedReader clientIn, PrintWriter clientOut,
-                       BufferedReader endIn, PrintWriter endOut,
-                       int id) {
-        this.clientIn = clientIn;
-        this.clientOut = clientOut;
-        this.endIn = endIn;
-        this.endOut = endOut;
-        this.id = id;
+    List<ProxyHandler> connections;
+    private final Queue<ProxyHandler> toDelete;
+
+    public ProxyThread() {
+        toDelete = new LinkedList<>();
     }
 
     @Override
     public void run() {
         try {
-            //handshake
-            String temp = endIn.readLine(); //get message from end
-            ServerTCP.lastProxy[id] = temp;
-            clientOut.println(temp); //send it to client
-            temp = clientIn.readLine(); //get message from client
-            ServerTCP.lastProxy[id] = temp;
-            endOut.println(temp); //send it to end
 
-            //required for system switches, but timeout can be set to less
-            sleep(100);
+            while (!currentThread().isInterrupted()) {
 
-            while (!temp.equals("exit")) {
-                temp = clientIn.readLine();
-                System.out.println("Proxy got client message: " + temp);
-                ServerTCP.lastProxy[id] = temp;
-                endOut.println(temp);
-                temp = endIn.readLine();
-                System.out.println("Proxy got server message: " + temp);
-                ServerTCP.lastProxy[id] = temp;
-                clientOut.println(temp);
+                synchronized (connections) {
+                    Collections.shuffle(connections); //fair checking
+
+                    for (ProxyHandler ph : connections) {
+                        if (ph.clientIn.ready()) {
+                            String temp = ph.clientIn.readLine();
+                            System.out.println("Proxy got client message: " + temp);
+
+                            if (temp.equals("exit")) {
+                                System.out.println("Client " + ph.id + " disconnected");
+                                toDelete.add(ph);
+                            } else {
+                                ServerTCP.lastProxy[ph.id] = temp;
+                            }
+
+                            ph.endOut.println(temp);
+                            temp = ph.endIn.readLine();
+                            System.out.println("Proxy got server message: " + temp);
+                            ph.clientOut.println(temp);
+                        }
+                    }
+
+                    //connections are explicitly stored in the list, Garbage Collector won't help
+                    for (ProxyHandler ph : toDelete) {
+                        connections.remove(ph);
+                    }
+
+                    toDelete.clear();
+                }
+                sleep(10); //let smn connect after one round
             }
-            System.out.println("Client " + id + " disconnected");
+
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

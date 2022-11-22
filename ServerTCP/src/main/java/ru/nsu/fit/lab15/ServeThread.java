@@ -1,44 +1,56 @@
 package ru.nsu.fit.lab15;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 public class ServeThread implements Runnable {
 
-    private final int id;
-    private final BufferedReader in;
-    private final PrintWriter out;
+    List<SocketHandler> sockets;
+    private final Queue<SocketHandler> toDelete;
 
-    public ServeThread(BufferedReader in, PrintWriter out, int id) {
-        this.in = in;
-        this.out = out;
-        this.id = id;
+    public ServeThread() {
+        toDelete = new LinkedList<>();
     }
+
 
     @Override
     public void run() {
         try {
-            //handshake
-            out.println("My luck to know you");
-            System.out.println("Greeted client");
+            while (!currentThread().isInterrupted()) {
 
-            String current = in.readLine();
-            System.out.println("Got greeting from client " + id + ": " + current);
-            ServerTCP.lastSent[id] = current;
+                synchronized (sockets) {
+                    Collections.shuffle(sockets); //fair checking
 
-            //required for system switches, but timeout can be set to less
-            sleep(100);
+                    for (SocketHandler sh : sockets) {
+                        if (sh.in.ready()) {
+                            String current = sh.in.readLine();
+                            System.out.println("Got the following line from client " + sh.id + ": " + current);
+                            sh.out.println("heard " + current);
+                            if (current.equals("exit")) {
+                                System.out.println("Client " + sh.id + " disconnected");
+                                toDelete.add(sh);
+                            } else {
+                                ServerTCP.lastSent[sh.id] = current;
+                            }
+                        }
+                    }
 
-            while (!current.equals("exit")) {
-                current = in.readLine();
-                System.out.println("Got the following line from client " + id + ": " + current);
-                out.println("heard " + current);
-                ServerTCP.lastSent[id] = current;
+                    //connections are explicitly stored in the list, Garbage Collector won't help
+                    for (SocketHandler sh : toDelete) {
+                        sockets.remove(sh);
+                    }
+
+                    toDelete.clear();
+
+                }
+                sleep(10); //let smn connect after one round
             }
-            System.out.println("Client " + id + " disconnected");
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
