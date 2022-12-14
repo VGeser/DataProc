@@ -20,8 +20,7 @@ be careful of:
 ```bat
 your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.nioproxy.Proxy 3434 <your-local-IP> 2525
 ```
-For some reason InetAddress.getByName(String address) does not recognize "localhost" or loopback A.K.A. 127.0.0.1
-In my case, I put 169.254.248.109, which is my grey public IP
+For some reason InetAddress.getByName(String address) does not recognize "localhost" or loopback A.K.A. 127.0.0.1. In my case, I put 169.254.248.109, which is my grey public IP
 
 4) run clients
 ```bat
