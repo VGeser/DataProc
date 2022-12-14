@@ -28,3 +28,5 @@ your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.niopr
 ```
 
 5) the client will stay connected until you enter "exit"
+
+6) Both server and proxy do NOT gracefully close connection, on SIGINT(^C) they fall with exception. You can implement yourself 
