@@ -1,7 +1,4 @@
 # TCP Server
-```diff
-- - - - - - - - TDD FOR LIFE! - - - - - - - -
-```
 
 To test with your own hands, open 4 command prompts: 1 end server, 1 proxy and 2 clients
 1) compile files
@@ -9,11 +6,11 @@ To test with your own hands, open 4 command prompts: 1 end server, 1 proxy and 2
 I put absolute path, you may google javac docs to make it more convenient
 
 ```bat
-your directory> "C:\Program Files\Java\jdk-14.0.2\bin\javac.exe" ServerTCP.java ClientTCP.java ProxyThread.java ServeThread.java ProxyHandler.java SocketHandler.java
+your directory> "C:\Program Files\Java\jdk-14.0.2\bin\javac.exe" Server.java Client.java Proxy.java
 ```
 2) run end server (order matters!)
 ```bat
-your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.lab15.ServerTCP 2525 2 localhost
+your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.nioproxy.Server 2525 
 ```
 be careful of:
 - "java -version" and "absolute path\java.exe -version"
@@ -21,15 +18,14 @@ be careful of:
 
 3) run proxy (order matters!)
 ```bat
-your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.lab15.ServerTCP 3434 2 localhost 2525 localhost
+your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.nioproxy.Proxy 3434 <your-local-IP> 2525
 ```
+For some reason InetAddress.getByName(String address) does not recognize "localhost" or loopback A.K.A. 127.0.0.1
+In my case, I put 169.254.248.109, which is my grey public IP
 
 4) run clients
 ```bat
-your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.lab15.ClientTCP 3434 localhost c
+your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.lab15.ClientTCP 3434
 ```
 
 5) the client will stay connected until you enter "exit"
-
-6) the number of connections argument is supposed to be a limit of maximum concurrent connections, but actually is also a limit of total connections. 
-By the time of writing this instruction I am too tired to fix it. You can fix yourself
