@@ -24,7 +24,7 @@ For some reason InetAddress.getByName(String address) does not recognize "localh
 
 4) run clients
 ```bat
-your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.lab15.ClientTCP 3434
+your directory> "C:\Program Files\Java\jdk-14.0.2\bin\java.exe" ru.nsu.fit.nioproxy.Client 3434
 ```
 
 5) the client will stay connected until you enter "exit"
